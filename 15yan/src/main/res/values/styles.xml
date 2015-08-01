@@ -1,0 +1,32 @@
+<resources>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar" >
+
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="AppTheme" parent="AppTheme.Base" />
+    <style name="AppTheme.Detail" parent="AppTheme" />
+
+    <style name="AppTheme.Scrollbar" parent="AppTheme" >
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/shape_scrollbar</item>
+    </style>
+
+    <style name="AppTheme.PopupMenu" parent="Widget.AppCompat.PopupMenu" >
+        <item name="android:colorBackground">@color/primary_light</item>
+        <item name="android:textColor">@color/primary_dark</item>
+    </style>
+
+    <style name="AppTheme.SwitchCompat" parent="AppTheme" >
+
+        <item name="colorControlActivated">@color/primary_dark</item>
+        <item name="colorSwitchThumbNormal">@color/accent</item>
+        <item name="android:colorForeground">@color/accent</item>
+    </style>
+</resources>

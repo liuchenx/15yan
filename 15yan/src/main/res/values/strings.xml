@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">十五言</string>
+    <string name="settings">设置</string>
+    <string name="read_cost">%1$s分钟阅读</string>
+
+    <string name="read_fail">读取数据出错, 请稍后重试</string>
+    <string-array name="topic">
+        <item>最新</item>
+        <item>热门</item>
+    </string-array>
+
+    <string name="preferences">偏好设置</string>
+    <string name="only_wifi">无图模式</string>
+    <string name="only_wifi_des">仅在wifi下加载图片, 已缓存的仍然加载</string>
+
+    <string name="other">其他</string>
+    <string name="version">版本信息 %1$s</string>
+
+</resources>

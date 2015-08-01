@@ -1,0 +1,96 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="org.liuyichen.fifteenyan.utils.Settings" />
+    </data>
+    <ScrollView
+        style="@style/AppTheme.Scrollbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        tools:context="org.liuyichen.fifteenyan.fragment.SettingsFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                style="@style/AppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/preferences"
+                android:textColor="@color/primary_dark"
+                android:textSize="@dimen/settings_title_text_size"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/item_settings_vertical_margin"
+                android:paddingTop="@dimen/item_settings_vertical_margin">
+
+                <TextView
+                    android:id="@+id/only_wifi_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/only_wifi"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/settings_title_text_size"
+                    tools:ignore="RtlHardcoded"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/only_wifi_title"
+                    android:text="@string/only_wifi_des"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/settings_des_text_size"
+                    tools:ignore="RtlHardcoded"/>
+
+                <android.support.v7.widget.SwitchCompat
+                    android:theme="@style/AppTheme.SwitchCompat"
+                    android:id="@+id/only_wifi_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/transparent"
+                    android:checked="@{Settings.isOnlyWifiOpen()}"
+                    app:showText="false"/>
+            </RelativeLayout>
+
+            <TextView
+                style="@style/AppTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/other"
+                android:textColor="@color/primary_dark"
+                android:textSize="@dimen/settings_title_text_size"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/item_settings_vertical_margin"
+                android:paddingTop="@dimen/item_settings_vertical_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@{@string/version(Settings.getAppVersion())}"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/settings_title_text_size"
+                    tools:ignore="RtlHardcoded"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <import type="android.text.TextUtils"/>
+
+        <import type="org.liuyichen.fifteenyan.model.Account"/>
+
+        <import type="org.liuyichen.fifteenyan.model.Story"/>
+
+        <variable
+            name="story"
+            type="Story"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/item_vertical_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{story.title}"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/item_text_title_size"/>
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="@dimen/item_subtitle_vertical_margin"
+                android:text="@{story.subtitle}"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/item_text_subtitle_size"
+                android:visibility="@{TextUtils.isEmpty(story.subtitle)? View.GONE : View.VISIBLE}"/>
+
+            <TextView
+                android:id="@+id/editor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/subtitle"
+                android:layout_marginTop="@dimen/item_footnote_vertical_margin"
+                android:text="@{story.account.realname}"
+                android:textColor="@color/item_text_footnote_color"
+                android:textSize="@dimen/item_text_footnote_size"/>
+
+            <TextView
+                android:id="@+id/readcost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/editor"
+                android:layout_marginLeft="@dimen/item_footnote_horizontal_margin"
+                android:layout_toRightOf="@+id/editor"
+                android:text="@{@string/read_cost(story.readCost)}"
+                android:textColor="@color/item_text_footnote_color"
+                android:textSize="@dimen/item_text_footnote_size"/>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/item_avatar_size"
+            android:layout_height="@dimen/item_avatar_size"
+            android:layout_marginLeft="@dimen/item_avatar_horizontal_margin"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            app:imageUrl="@{story.account.avatar}"/>
+    </LinearLayout>
+</layout>
