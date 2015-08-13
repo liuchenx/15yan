@@ -1,12 +1,11 @@
 # 15yan
 [十五言]轻量级客户端， 提供基本的浏览功能
 
-使用data binding 快速开发的客户端
-
+基于data binding 快速开发
 
 use android studio 1.3.0
 
-用到的依赖：
+open source support：
 
 * [ollie][2]
 * [picasso][4]
