@@ -15,6 +15,6 @@ public class Const {
 
     public static final boolean isDebug() {
 
-        return App.getSelf().getResources().getBoolean(R.bool.isDebug);
+        return BuildConfig.DEBUG;
     }
 }
