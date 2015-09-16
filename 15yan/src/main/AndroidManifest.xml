@@ -19,11 +19,11 @@
             android:value="551d2a13fd98c5b5cc000130" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="wandoujia" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
 
         <provider
             android:name=".provider.StoryProvider"
-            android:authorities="org.liuyichen.fifteenyan"
+            android:authorities="${applicationId}"
             android:exported="false" />
 
         <activity
