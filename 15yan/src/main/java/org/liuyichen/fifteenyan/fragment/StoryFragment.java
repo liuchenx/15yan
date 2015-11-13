@@ -1,6 +1,5 @@
 package org.liuyichen.fifteenyan.fragment;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -14,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
 import org.liuyichen.fifteenyan.adapter.StoryAdapter;
 import org.liuyichen.fifteenyan.api.Api;
@@ -56,8 +56,8 @@ public class StoryFragment extends BindFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         category = (Category) getArguments().getSerializable(EXTRA_CATEGORY);
     }
 
@@ -89,7 +89,7 @@ public class StoryFragment extends BindFragment
         binding.ptrFrame.setPtrHandler(this);
         storyAdapter = new StoryAdapter(getActivity());
         binding.recyclerview.setAdapter(storyAdapter);
-        binding.recyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
@@ -164,7 +164,7 @@ public class StoryFragment extends BindFragment
     @Override
     public void onFailure(Throwable error) {
         binding.ptrFrame.refreshComplete();
-        Toast.makeText(getActivity(), R.string.read_fail, Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
         loading = false;
     }
 
