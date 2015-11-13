@@ -2,6 +2,7 @@ package org.liuyichen.fifteenyan.http;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import org.liuyichen.fifteenyan.Const;
 
@@ -24,6 +25,9 @@ public class Network {
                 }
                 if (Const.isDebug()) {
                     okHttpClient.networkInterceptors().add(new StethoInterceptor());
+                    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+                    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                    okHttpClient.interceptors().add(interceptor);
                 }
             }
         }

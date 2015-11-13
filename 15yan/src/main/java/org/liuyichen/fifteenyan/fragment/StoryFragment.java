@@ -31,9 +31,10 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 import ollie.query.Select;
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import static android.view.View.OVER_SCROLL_NEVER;
 
@@ -145,13 +146,14 @@ public class StoryFragment extends BindFragment
     private void load(int offset) {
 
         loading = true;
-        Api.getStorys(offset, category.value(), this);
+        Call<Data> call = Api.getStorys(offset, category.value());
+        call.enqueue(this);
     }
 
     @Override
-    public void success(Data data, Response response) {
+    public void onResponse(Response<Data> response, Retrofit retrofit) {
         binding.ptrFrame.refreshComplete();
-        ArrayList<Story> results = data.result;
+        ArrayList<Story> results = response.body().result;
         for (Story story : results) {
             story.category = category.value();
             story.saved();
@@ -160,7 +162,7 @@ public class StoryFragment extends BindFragment
     }
 
     @Override
-    public void failure(RetrofitError error) {
+    public void onFailure(Throwable error) {
         binding.ptrFrame.refreshComplete();
         Toast.makeText(getActivity(), R.string.read_fail, Toast.LENGTH_SHORT).show();
         loading = false;

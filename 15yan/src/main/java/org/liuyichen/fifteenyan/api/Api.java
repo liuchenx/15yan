@@ -3,15 +3,13 @@ package org.liuyichen.fifteenyan.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.liuyichen.fifteenyan.Const;
 import org.liuyichen.fifteenyan.http.Network;
 import org.liuyichen.fifteenyan.model.Data;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+
 
 /**
  * Created by liuchen on 15/8/1.
@@ -23,19 +21,21 @@ public class Api {
     static {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(ApiService.BASE_URL)
-                .setLogLevel(Const.isDebug() ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setConverter(new GsonConverter(gson))
-                .setClient(new OkClient(Network.getOkClient()))
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiService.BASE_URL)
+                .addConverterFactory(StringConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(Network.getOkClient())
                 .build();
-        service = restAdapter.create(ApiService.class);
+
+        service = retrofit.create(ApiService.class);
     }
 
-    public static void getStorys(int offset, String orderBy, Callback<Data> callback) {
-        service.getStorys(offset, orderBy, callback);
+    public static Call<Data> getStorys(int offset, String orderBy) {
+        return service.getStorys(offset, orderBy);
     }
 
-    public static void getDetailStory(String storyId, Callback<Response> callback) {
-        service.getDetailStory(storyId, callback);
+    public static Call<String> getDetailStory(String storyId) {
+        return service.getDetailStory(storyId);
     }
 }

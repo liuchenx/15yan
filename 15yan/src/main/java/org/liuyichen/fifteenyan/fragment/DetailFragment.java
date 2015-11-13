@@ -1,6 +1,5 @@
 package org.liuyichen.fifteenyan.fragment;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.webkit.WebView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
 import org.liuyichen.fifteenyan.api.Api;
 import org.liuyichen.fifteenyan.databinding.FragmentDetailBinding;
@@ -23,21 +23,20 @@ import org.liuyichen.fifteenyan.utils.AssetsUtils;
 import org.liuyichen.fifteenyan.utils.Settings;
 import org.liuyichen.fifteenyan.utils.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import ollie.query.Select;
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedInput;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import static android.view.View.OVER_SCROLL_NEVER;
 
 /**
  * By liuyichen on 15-3-3 下午5:04.
  */
-public class DetailFragment extends BaseFragment implements Callback<Response> {
+public class DetailFragment extends BaseFragment implements Callback<String> {
+
+    private static final String TAG = "DetailFragment";
 
     private static final String EXTRA_STORY = "DetailFragment:EXTRA_STORY";
 
@@ -51,8 +50,8 @@ public class DetailFragment extends BaseFragment implements Callback<Response> {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mStory = getArguments().getParcelable(EXTRA_STORY);
     }
 
@@ -116,26 +115,30 @@ public class DetailFragment extends BaseFragment implements Callback<Response> {
         if (cache != null) {
             binding.webview.loadDataWithBaseURL(null, cache.detail, "text/html", "utf-8", null);
         } else {
-            Api.getDetailStory(mStory.storyId, this);
+            Call<String> call = Api.getDetailStory(mStory.storyId);
+            call.enqueue(this);
         }
     }
 
     @Override
-    public void success(Response response, Response ignored) {
+    public void onResponse(Response<String> response, Retrofit retrofit) {
 
-        TypedInput body = response.getBody();
-        StringBuilder out = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(body.in(), "UTF-8"));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                out.append(line);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        TypedInput body = response.getBody();
+//        StringBuilder out = new StringBuilder();
+//        try {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(body.in(), "UTF-8"));
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                out.append(line);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        String html = fixHtml(out.toString());
 
-        String html = fixHtml(out.toString());
+        String html = fixHtml(response.body());
+        android.util.Log.e(TAG, "onResponse html: " + html);
         DetailCache cache = new DetailCache();
         cache.storyId = mStory.storyId;
         cache.detail = html;
@@ -170,10 +173,13 @@ public class DetailFragment extends BaseFragment implements Callback<Response> {
     }
 
     @Override
-    public void failure(RetrofitError error) {
+    public void onFailure(Throwable t) {
 
-        Toast.makeText(getActivity(), R.string.read_fail, Toast.LENGTH_SHORT).show();
-        getActivity().onBackPressed();
+        android.util.Log.e(TAG, "onFailure: " + t);
+        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
+        }
     }
 
     @Override
