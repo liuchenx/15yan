@@ -22,7 +22,7 @@ use android studio 1.3.0
 
 ![截图][11]
 
-## 关于我
+## about
 
 * Email: liuchen.park@gmail.com
 
