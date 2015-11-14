@@ -9,6 +9,8 @@ import org.liuyichen.fifteenyan.model.Data;
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
+import rx.Observable;
 
 
 /**
@@ -25,6 +27,7 @@ public class Api {
                 .baseUrl(ApiService.BASE_URL)
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(Network.getOkClient())
                 .build();
 
@@ -35,7 +38,11 @@ public class Api {
         return service.getStorys(offset, orderBy);
     }
 
-    public static Call<String> getDetailStory(String storyId) {
+//    public static Call<String> getDetailStory(String storyId) {
+//        return service.getDetailStory(storyId);
+//    }
+
+    public static Observable<String> getDetailStory(String storyId) {
         return service.getDetailStory(storyId);
     }
 }

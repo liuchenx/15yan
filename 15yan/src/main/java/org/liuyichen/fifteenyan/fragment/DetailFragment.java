@@ -3,7 +3,7 @@ package org.liuyichen.fifteenyan.fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +24,16 @@ import org.liuyichen.fifteenyan.utils.Settings;
 import org.liuyichen.fifteenyan.utils.Toast;
 
 import ollie.query.Select;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
-import static android.view.View.OVER_SCROLL_NEVER;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * By liuyichen on 15-3-3 下午5:04.
  */
-public class DetailFragment extends BaseFragment implements Callback<String> {
+public class DetailFragment extends BaseFragment {
 
     private static final String TAG = "DetailFragment";
 
@@ -50,7 +49,7 @@ public class DetailFragment extends BaseFragment implements Callback<String> {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStory = getArguments().getParcelable(EXTRA_STORY);
     }
@@ -59,7 +58,6 @@ public class DetailFragment extends BaseFragment implements Callback<String> {
 
     private Story mStory;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
@@ -70,18 +68,13 @@ public class DetailFragment extends BaseFragment implements Callback<String> {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         requestData();
     }
 
     private void initWebview() {
         WebView webView = binding.webview;
-        if (Build.VERSION.SDK_INT < 9) {
-            webView.setFadingEdgeLength(0);
-        } else if (Build.VERSION.SDK_INT < 21) {
-            webView.setOverScrollMode(OVER_SCROLL_NEVER);
-        }
         webView.setVerticalScrollBarEnabled(true);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -101,52 +94,74 @@ public class DetailFragment extends BaseFragment implements Callback<String> {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
-
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
-        //     String cacheDirPath = getFilesDir().getAbsolutePath()+APP_CACAHE_DIRNAME;
-        //       webView.getSettings().setAppCachePath(cacheDirPath);
         webView.getSettings().setAppCacheEnabled(true);
     }
 
     private void requestData() {
 
-        DetailCache cache = Select.from(DetailCache.class).where("storyId = ?", mStory.storyId).fetchSingle();
-        if (cache != null) {
-            binding.webview.loadDataWithBaseURL(null, cache.detail, "text/html", "utf-8", null);
-        } else {
-            Call<String> call = Api.getDetailStory(mStory.storyId);
-            call.enqueue(this);
-        }
-    }
+        Select.from(DetailCache.class).where("storyId = ?", mStory.storyId).observableSingle()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(new Func1<DetailCache, Boolean>() {
+                    @Override
+                    public Boolean call(DetailCache detailCache) {
 
-    @Override
-    public void onResponse(Response<String> response, Retrofit retrofit) {
+                        Boolean b = (detailCache == null);
+                        if (!b) {
+                            binding.webview.loadDataWithBaseURL(null, detailCache.detail, "text/html", "utf-8", null);
+                        }
+                        return b;
+                    }
+                }).observeOn(Schedulers.io())
+                .flatMap(new Func1<DetailCache, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(DetailCache detailCache) {
+                        return Api.getDetailStory(mStory.storyId);
+                    }
+                })
+                .map(new Func1<String, String>() {
 
-//        TypedInput body = response.getBody();
-//        StringBuilder out = new StringBuilder();
-//        try {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(body.in(), "UTF-8"));
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                out.append(line);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        String html = fixHtml(out.toString());
+                    @Override
+                    public String call(String s) {
+                        return fixHtml(s);
+                    }
+                })
+                .map(new Func1<String, String>() {
 
-        String html = fixHtml(response.body());
-        android.util.Log.e(TAG, "onResponse html: " + html);
-        DetailCache cache = new DetailCache();
-        cache.storyId = mStory.storyId;
-        cache.detail = html;
-        cache.save();
+                    @Override
+                    public String call(String s) {
 
-        // picture mode
-        binding.webview.getSettings().setBlockNetworkImage(!Settings.canLoadImage());
-        binding.webview.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+                        DetailCache cache = new DetailCache();
+                        cache.storyId = mStory.storyId;
+                        cache.detail = s;
+                        cache.save();
+                        return s;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e);
+                        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
+                        if (getActivity() != null) {
+                            getActivity().onBackPressed();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        binding.webview.getSettings().setBlockNetworkImage(!Settings.canLoadImage());
+                        binding.webview.loadDataWithBaseURL(null, s, "text/html", "utf-8", null);
+                    }
+                });
     }
 
     private String fixHtml(String h) {
@@ -170,16 +185,6 @@ public class DetailFragment extends BaseFragment implements Callback<String> {
         }
 
         return html;
-    }
-
-    @Override
-    public void onFailure(Throwable t) {
-
-        android.util.Log.e(TAG, "onFailure: " + t);
-        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
-        if (getActivity() != null) {
-            getActivity().onBackPressed();
-        }
     }
 
     @Override
