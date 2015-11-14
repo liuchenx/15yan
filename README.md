@@ -5,14 +5,16 @@
 
 use android studio 1.3.0
 
-open source support：
+## Thinks
 
-* [ollie][2]
-* [picasso][4]
-* [retrofit][5]
-* [ultra-ptr][6]
-* [roundedimageview][7]
-* [swipeback][9]
+* [Stetho][1]
+* [Ollie][2]
+* [RxJava][3]
+* [Picasso][4]
+* [Retrofit][5]
+* [Ultra-ptr][6]
+* [Roundedimageview][7]
+* [Swipeback][9]
 
 
 
@@ -50,8 +52,9 @@ limitations under the License.
 
 
 
-[1]: https://github.com/square
+[1]: https://github.com/facebook/stetho
 [2]: https://github.com/pardom/Ollie
+[3]: https://github.com/ReactiveX/RxJava
 [4]: https://github.com/square/picasso
 [5]: https://github.com/square/retrofit
 [6]: https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh
