@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import org.liuyichen.fifteenyan.http.Network;
 import org.liuyichen.fifteenyan.model.Data;
 
-import retrofit.Call;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
@@ -34,13 +33,9 @@ public class Api {
         service = retrofit.create(ApiService.class);
     }
 
-    public static Call<Data> getStorys(int offset, String orderBy) {
+    public static Observable<Data> getStorys(int offset, String orderBy) {
         return service.getStorys(offset, orderBy);
     }
-
-//    public static Call<String> getDetailStory(String storyId) {
-//        return service.getDetailStory(storyId);
-//    }
 
     public static Observable<String> getDetailStory(String storyId) {
         return service.getDetailStory(storyId);

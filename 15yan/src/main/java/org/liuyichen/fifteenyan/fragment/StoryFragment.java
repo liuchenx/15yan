@@ -2,14 +2,13 @@ package org.liuyichen.fifteenyan.fragment;
 
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,29 +22,30 @@ import org.liuyichen.fifteenyan.databinding.FragmentStoryBinding;
 import org.liuyichen.fifteenyan.model.Data;
 import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.provider.StoryProvider;
+import org.liuyichen.fifteenyan.utils.EndlessRecyclerOnScrollListener;
 import org.liuyichen.fifteenyan.utils.Toast;
-
-import java.util.ArrayList;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 import ollie.query.Select;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
-import static android.view.View.OVER_SCROLL_NEVER;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * By liuyichen on 15-3-3 下午5:03.
  */
 public class StoryFragment extends BindFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, PtrHandler, Callback<Data>
+        implements LoaderManager.LoaderCallbacks<Cursor>, PtrHandler
             , AppBarLayout.OnOffsetChangedListener {
 
+    private static final String TAG = "StoryFragment";
     private static final String EXTRA_CATEGORY = "StoryFragment:EXTRA_CATEGORY";
 
     public static StoryFragment create(Category category) {
@@ -69,10 +69,6 @@ public class StoryFragment extends BindFragment
 
     private int offset = 0;
 
-    private boolean loading = false;
-
-    private int pastVisiblesItems, visibleItemCount, totalItemCount;
-
     private FragmentStoryBinding binding;
 
     @Override
@@ -87,26 +83,30 @@ public class StoryFragment extends BindFragment
         getLoaderManager().initLoader(0, null, this);
 
         initPtr();
-        initRecyclerview();
         binding.ptrFrame.setPtrHandler(this);
         storyAdapter = new StoryAdapter(getActivity());
+
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        binding.recyclerview.setLayoutManager(lm);
         binding.recyclerview.setAdapter(storyAdapter);
-        binding.recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerview.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                visibleItemCount = layoutManager.getChildCount();
-                totalItemCount = layoutManager.getItemCount();
-                pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-
-                if (!loading) {
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                        load(offset);
-                    }
-                }
+            public void onLoadMore(int current_page) {
+                load(offset);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getLoaderManager().destroyLoader(0);
+        if (fristSubscription != null && fristSubscription.isUnsubscribed()) {
+            fristSubscription.unsubscribe();
+        }
+        if (loadSubscription != null && loadSubscription.isUnsubscribed()) {
+            loadSubscription.unsubscribe();
+        }
     }
 
     private void initPtr() {
@@ -116,58 +116,80 @@ public class StoryFragment extends BindFragment
         int[] colors = new int[]{getResources().getColor(R.color.primary)};
         header.setColorSchemeColors(colors);
 
-        binding.ptrFrame.setInterceptEventWhileWorking(true);
         binding.ptrFrame.setDurationToCloseHeader(1500);
         binding.ptrFrame.setHeaderView(header);
         binding.ptrFrame.addPtrUIHandler(header);
     }
 
-    private void initRecyclerview() {
-
-        if (Build.VERSION.SDK_INT >= 9) {
-            binding.recyclerview.setOverScrollMode(OVER_SCROLL_NEVER);
-        } else {
-            binding.recyclerview.setFadingEdgeLength(0);
-        }
-
-        binding.recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-    }
+    private Subscription fristSubscription;
+    private Subscription loadSubscription;
 
     public void onUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            Integer count = Select.columns("COUNT(*)")
+            fristSubscription = Select.columns("COUNT(*)")
                     .from(Story.class)
-                    .where("category = ?", category.value())
-                    .fetchValue(Integer.class);
-            if (count == 0) {
-                binding.ptrFrame.autoRefresh();
-            }
+                    .where("category = ?", category.value()).observableValue(Integer.class)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .filter(new Func1<Integer, Boolean>() {
+                        @Override
+                        public Boolean call(Integer integer) {
+                            return integer == 0;
+                        }
+                    }).subscribe(new Action1<Integer>() {
+                        @Override
+                        public void call(Integer integer) {
+                            binding.ptrFrame.autoRefresh();
+                        }
+                    });
         }
     }
+
+    private boolean isLoading = false;
 
     private void load(int offset) {
-
-        loading = true;
-        Call<Data> call = Api.getStorys(offset, category.value());
-        call.enqueue(this);
-    }
-
-    @Override
-    public void onResponse(Response<Data> response, Retrofit retrofit) {
-        binding.ptrFrame.refreshComplete();
-        ArrayList<Story> results = response.body().result;
-        for (Story story : results) {
-            story.category = category.value();
-            story.saved();
+        if (isLoading) {
+            return;
         }
-        loading = false;
-    }
+        isLoading = true;
+        loadSubscription = Api.getStorys(offset, category.value())
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Func1<Data, Observable<Story>>() {
+                    @Override
+                    public Observable<Story> call(Data data) {
+                        return Observable.from(data.result);
+                    }
+                }).observeOn(Schedulers.io())
+                .map(new Func1<Story, Void>() {
 
-    @Override
-    public void onFailure(Throwable error) {
-        binding.ptrFrame.refreshComplete();
-        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
-        loading = false;
+                    @Override
+                    public Void call(Story story) {
+                        story.category = category.value();
+                        story.saved();
+                        return null;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Void>() {
+                    @Override
+                    public void onCompleted() {
+                        isLoading = false;
+                        binding.ptrFrame.refreshComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e);
+                        isLoading = false;
+                        binding.ptrFrame.refreshComplete();
+                        Toast.makeText(App.getSelf(), R.string.read_fail, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(Void aVoid) {
+
+                    }
+                });
     }
 
     @Override

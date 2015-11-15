@@ -29,7 +29,6 @@ public  class NavigationAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         return storyFragments[position];
     }
 

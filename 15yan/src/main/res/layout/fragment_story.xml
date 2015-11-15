@@ -23,7 +23,9 @@
             android:id="@+id/recyclerview"
             style="@style/AppTheme.Scrollbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:fadingEdgeLength="0dp"/>
 
     </in.srain.cube.views.ptr.PtrFrameLayout>
 </layout>

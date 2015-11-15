@@ -26,6 +26,7 @@ import org.liuyichen.fifteenyan.utils.Toast;
 import ollie.query.Select;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -99,9 +100,11 @@ public class DetailFragment extends BaseFragment {
         webView.getSettings().setAppCacheEnabled(true);
     }
 
+    private Subscription subscription;
+
     private void requestData() {
 
-        Select.from(DetailCache.class).where("storyId = ?", mStory.storyId).observableSingle()
+        subscription = Select.from(DetailCache.class).where("storyId = ?", mStory.storyId).observableSingle()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(new Func1<DetailCache, Boolean>() {
@@ -190,6 +193,9 @@ public class DetailFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
         if (binding.webview != null) {
             binding.webview.destroy();
         }
