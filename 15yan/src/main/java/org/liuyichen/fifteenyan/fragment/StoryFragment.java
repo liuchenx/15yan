@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -42,7 +43,8 @@ import static android.view.View.OVER_SCROLL_NEVER;
  * By liuyichen on 15-3-3 下午5:03.
  */
 public class StoryFragment extends BindFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, PtrHandler, Callback<Data> {
+        implements LoaderManager.LoaderCallbacks<Cursor>, PtrHandler, Callback<Data>
+            , AppBarLayout.OnOffsetChangedListener {
 
     private static final String EXTRA_CATEGORY = "StoryFragment:EXTRA_CATEGORY";
 
@@ -186,14 +188,20 @@ public class StoryFragment extends BindFragment
     }
 
     @Override
-    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-        return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
-    }
-
-    @Override
     public void onRefreshBegin(PtrFrameLayout ptr) {
         offset = 0;
         Story.clear(category.value());
         load(offset);
+    }
+
+    private int mAppBarOffset = 0;
+    @Override
+    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+        return (mAppBarOffset == 0) && PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        mAppBarOffset = verticalOffset;
     }
 }

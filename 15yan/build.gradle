@@ -62,7 +62,7 @@ dependencies {
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
 
-    compile 'in.srain.cube:ultra-ptr:1.0.7'
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.makeramen:roundedimageview:1.5.0'
     compile 'com.hannesdorfmann:swipeback:1.0.0'
     compile 'com.umeng.analytics:analytics:latest.integration'

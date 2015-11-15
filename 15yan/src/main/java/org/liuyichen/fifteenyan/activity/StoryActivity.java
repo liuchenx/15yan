@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import org.liuyichen.fifteenyan.R;
 import org.liuyichen.fifteenyan.adapter.NavigationAdapter;
 import org.liuyichen.fifteenyan.databinding.ActivityStoryBinding;
+import org.liuyichen.fifteenyan.fragment.StoryFragment;
 import org.liuyichen.fifteenyan.utils.Toast;
 
 public class StoryActivity extends BaseActivty {
@@ -28,6 +29,10 @@ public class StoryActivity extends BaseActivty {
         binding.tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         binding.tabs.setupWithViewPager(binding.viewpager);
         binding.tabs.setTabsFromPagerAdapter(adapter);
+
+        for (StoryFragment storyFragment: adapter.getStoryFragments()) {
+            binding.appbar.addOnOffsetChangedListener(storyFragment);
+        }
     }
 
     @Override

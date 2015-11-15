@@ -17,6 +17,10 @@ import org.liuyichen.fifteenyan.fragment.StoryFragment;
 public  class NavigationAdapter extends FragmentPagerAdapter {
 
     private final String[] TITLES;
+    private final StoryFragment[] storyFragments = {
+            StoryFragment.create(Category.LATEST),
+            StoryFragment.create(Category.HOT),
+    };
 
     public NavigationAdapter(Context context, FragmentManager fm) {
         super(fm);
@@ -25,19 +29,8 @@ public  class NavigationAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment f;
-        switch (position) {
-            case 0:
-                f = StoryFragment.create(Category.LATEST);
-                break;
-            case 1:
-                f = StoryFragment.create(Category.HOT);
-                break;
-            default:
-                f = StoryFragment.create(Category.LATEST);
-                break;
-        }
-        return f;
+
+        return storyFragments[position];
     }
 
     @Override
@@ -50,5 +43,7 @@ public  class NavigationAdapter extends FragmentPagerAdapter {
         return TITLES[position];
     }
 
-
+    public StoryFragment[] getStoryFragments() {
+        return storyFragments;
+    }
 }
