@@ -86,7 +86,7 @@ public class StoryFragment extends BindFragment
         binding.ptrFrame.setPtrHandler(this);
         storyAdapter = new StoryAdapter(getActivity());
 
-        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager lm = new LinearLayoutManager(App.getSelf());
         binding.recyclerview.setLayoutManager(lm);
         binding.recyclerview.setAdapter(storyAdapter);
         binding.recyclerview.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
@@ -100,6 +100,7 @@ public class StoryFragment extends BindFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding.unbind();
         getLoaderManager().destroyLoader(0);
         if (fristSubscription != null && fristSubscription.isUnsubscribed()) {
             fristSubscription.unsubscribe();
@@ -124,6 +125,7 @@ public class StoryFragment extends BindFragment
     private Subscription fristSubscription;
     private Subscription loadSubscription;
 
+    @Override
     public void onUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
             fristSubscription = Select.columns("COUNT(*)")
@@ -147,19 +149,28 @@ public class StoryFragment extends BindFragment
 
     private boolean isLoading = false;
 
-    private void load(int offset) {
+    private void load(final int offset) {
         if (isLoading) {
             return;
         }
         isLoading = true;
-        loadSubscription = Api.getStorys(offset, category.value())
+        loadSubscription = Observable.just(offset).flatMap(new Func1<Integer, Observable<Data>>() {
+                    @Override
+                    public Observable<Data> call(Integer offset) {
+                        if (offset == 0) {
+                            Story.clear(category.value());
+                        }
+                        return Api.getStorys(offset, category.value());
+                    }
+                })
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .flatMap(new Func1<Data, Observable<Story>>() {
                     @Override
                     public Observable<Story> call(Data data) {
                         return Observable.from(data.result);
                     }
-                }).observeOn(Schedulers.io())
+                })
                 .map(new Func1<Story, Void>() {
 
                     @Override
@@ -212,7 +223,6 @@ public class StoryFragment extends BindFragment
     @Override
     public void onRefreshBegin(PtrFrameLayout ptr) {
         offset = 0;
-        Story.clear(category.value());
         load(offset);
     }
 

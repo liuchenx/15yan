@@ -1,11 +1,10 @@
 package org.liuyichen.fifteenyan.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-
+import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
 import org.liuyichen.fifteenyan.api.Category;
 import org.liuyichen.fifteenyan.fragment.StoryFragment;
@@ -22,9 +21,9 @@ public  class NavigationAdapter extends FragmentPagerAdapter {
             StoryFragment.create(Category.HOT),
     };
 
-    public NavigationAdapter(Context context, FragmentManager fm) {
+    public NavigationAdapter(FragmentManager fm) {
         super(fm);
-        TITLES = context.getResources().getStringArray(R.array.topic);
+        TITLES = App.getSelf().getResources().getStringArray(R.array.topic);
     }
 
     @Override
@@ -34,7 +33,7 @@ public  class NavigationAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return TITLES.length;
+        return storyFragments.length;
     }
 
     @Override

@@ -1,6 +1,11 @@
 package org.liuyichen.fifteenyan;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import ollie.Ollie;
 /**
  * By liuyichen on 15-3-3 下午4:39.
@@ -9,12 +14,17 @@ public class App extends Application {
 
     private static App self;
 
+    private RefWatcher refWatcher;
+    public static RefWatcher getRefWatcher(Context context) {
+        App application = (App) context.getApplicationContext();
+        return application.refWatcher;
+    }
 
     @Override
     public void onCreate() {
         self = this;
         super.onCreate();
-
+        refWatcher = LeakCanary.install(this);
         Ollie
             .with(this)
             .setName(Const.DB_NAME)

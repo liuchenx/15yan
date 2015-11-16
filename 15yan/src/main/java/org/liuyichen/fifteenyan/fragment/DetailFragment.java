@@ -199,6 +199,7 @@ public class DetailFragment extends BaseFragment {
         if (binding.webview != null) {
             binding.webview.removeAllViews();
             binding.webview.destroy();
+            binding.unbind();
         }
     }
 }

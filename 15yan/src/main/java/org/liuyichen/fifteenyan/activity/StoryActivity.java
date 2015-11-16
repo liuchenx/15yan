@@ -14,30 +14,34 @@ import org.liuyichen.fifteenyan.utils.Toast;
 
 public class StoryActivity extends BaseActivty {
 
+    private ActivityStoryBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityStoryBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_story);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_story);
 
-        setSupportActionBar(binding.toolbar);
+        if (savedInstanceState == null) {
+            setSupportActionBar(binding.toolbar);
 
-        NavigationAdapter adapter = new NavigationAdapter(this, getSupportFragmentManager());
-        binding.viewpager.setAdapter(adapter);
+            NavigationAdapter adapter = new NavigationAdapter(getSupportFragmentManager());
+            binding.viewpager.setAdapter(adapter);
 
-        binding.tabs.setTabGravity(TabLayout.GRAVITY_CENTER);
-        binding.tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        binding.tabs.setupWithViewPager(binding.viewpager);
-        binding.tabs.setTabsFromPagerAdapter(adapter);
+            binding.tabs.setTabGravity(TabLayout.GRAVITY_CENTER);
+            binding.tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+            binding.tabs.setupWithViewPager(binding.viewpager);
+            binding.tabs.setTabsFromPagerAdapter(adapter);
 
-        for (StoryFragment storyFragment: adapter.getStoryFragments()) {
-            binding.appbar.addOnOffsetChangedListener(storyFragment);
+            for (StoryFragment storyFragment: adapter.getStoryFragments()) {
+                binding.appbar.addOnOffsetChangedListener(storyFragment);
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        binding.unbind();
         Toast.cancel();
     }
 
