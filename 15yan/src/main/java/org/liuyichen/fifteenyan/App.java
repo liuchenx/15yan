@@ -1,7 +1,6 @@
 package org.liuyichen.fifteenyan;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -15,9 +14,8 @@ public class App extends Application {
     private static App self;
 
     private RefWatcher refWatcher;
-    public static RefWatcher getRefWatcher(Context context) {
-        App application = (App) context.getApplicationContext();
-        return application.refWatcher;
+    public static RefWatcher getRefWatcher() {
+        return self.refWatcher;
     }
 
     @Override

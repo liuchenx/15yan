@@ -91,7 +91,7 @@ public class StoryFragment extends BindFragment
         binding.recyclerview.setAdapter(storyAdapter);
         binding.recyclerview.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
             @Override
-            public void onLoadMore(int current_page) {
+            public void onLoadMore() {
                 load(offset);
             }
         });
