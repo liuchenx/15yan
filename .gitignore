@@ -50,5 +50,6 @@ local.properties
 .DS_Store
 build
 *.iml
+captures
 
 
