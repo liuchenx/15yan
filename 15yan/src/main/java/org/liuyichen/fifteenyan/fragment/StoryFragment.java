@@ -205,7 +205,7 @@ public class StoryFragment extends BindFragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(getActivity(), StoryProvider.createUri(Story.class), null,
+        return new CursorLoader(App.getSelf(), StoryProvider.createUri(Story.class), null,
                 "category = ?", new String[]{category.value()}, null);
     }
 
