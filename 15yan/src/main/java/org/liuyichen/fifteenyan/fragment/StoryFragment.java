@@ -1,6 +1,7 @@
 package org.liuyichen.fifteenyan.fragment;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -29,6 +30,7 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
+import ollie.Ollie;
 import ollie.query.Select;
 import rx.Observable;
 import rx.Subscriber;
@@ -165,18 +167,21 @@ public class StoryFragment extends BindFragment
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .flatMap(new Func1<Data, Observable<Story>>() {
+                .map(new Func1<Data, Void>() {
                     @Override
-                    public Observable<Story> call(Data data) {
-                        return Observable.from(data.result);
-                    }
-                })
-                .map(new Func1<Story, Void>() {
+                    public Void call(Data data) {
 
-                    @Override
-                    public Void call(Story story) {
-                        story.category = category.value();
-                        story.saved();
+                        SQLiteDatabase db = Ollie.getDatabase();
+                        db.beginTransaction();
+                        try {
+                            for (Story story : data.result) {
+                                story.category = category.value();
+                                story.saved();
+                            }
+                            db.setTransactionSuccessful();
+                        } finally {
+                            db.endTransaction();
+                        }
                         return null;
                     }
                 })
