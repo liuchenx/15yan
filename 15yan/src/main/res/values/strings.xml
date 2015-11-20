@@ -6,6 +6,7 @@
     <string name="read_cost">%1$s分钟阅读</string>
 
     <string name="read_fail">读取数据出错, 请稍后重试</string>
+    <string name="no_more">没有更多了</string>
     <string-array name="topic">
         <item>最新</item>
         <item>热门</item>

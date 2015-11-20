@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.api;
+package org.liuyichen.fifteenyan.network;
 
 /**
  * Created by root on 15-3-12.

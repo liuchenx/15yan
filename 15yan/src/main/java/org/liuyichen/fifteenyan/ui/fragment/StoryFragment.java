@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.fragment;
+package org.liuyichen.fifteenyan.ui.fragment;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,14 +16,13 @@ import android.view.ViewGroup;
 
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.adapter.StoryAdapter;
-import org.liuyichen.fifteenyan.api.Api;
-import org.liuyichen.fifteenyan.api.Category;
+import org.liuyichen.fifteenyan.ui.adapter.StoryAdapter;
+import org.liuyichen.fifteenyan.network.Api;
+import org.liuyichen.fifteenyan.network.Category;
 import org.liuyichen.fifteenyan.databinding.FragmentStoryBinding;
 import org.liuyichen.fifteenyan.model.Data;
 import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.provider.StoryProvider;
-import org.liuyichen.fifteenyan.utils.EndlessRecyclerOnScrollListener;
 import org.liuyichen.fifteenyan.utils.Toast;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -87,16 +86,15 @@ public class StoryFragment extends BindFragment
         initPtr();
         binding.ptrFrame.setPtrHandler(this);
         storyAdapter = new StoryAdapter(getActivity());
-
-        LinearLayoutManager lm = new LinearLayoutManager(App.getSelf());
-        binding.recyclerview.setLayoutManager(lm);
-        binding.recyclerview.setAdapter(storyAdapter);
-        binding.recyclerview.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
+        storyAdapter.setOnEndListener(new StoryAdapter.OnEndListener() {
             @Override
-            public void onLoadMore() {
+            public void OnEnd() {
                 load(offset);
             }
         });
+        LinearLayoutManager lm = new LinearLayoutManager(App.getSelf());
+        binding.recyclerview.setLayoutManager(lm);
+        binding.recyclerview.setAdapter(storyAdapter);
     }
 
     @Override
@@ -167,9 +165,9 @@ public class StoryFragment extends BindFragment
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .map(new Func1<Data, Void>() {
+                .map(new Func1<Data, Integer>() {
                     @Override
-                    public Void call(Data data) {
+                    public Integer call(Data data) {
 
                         SQLiteDatabase db = Ollie.getDatabase();
                         db.beginTransaction();
@@ -182,11 +180,11 @@ public class StoryFragment extends BindFragment
                         } finally {
                             db.endTransaction();
                         }
-                        return null;
+                        return data.result.size();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Void>() {
+                .subscribe(new Subscriber<Integer>() {
                     @Override
                     public void onCompleted() {
                         isLoading = false;
@@ -202,8 +200,11 @@ public class StoryFragment extends BindFragment
                     }
 
                     @Override
-                    public void onNext(Void aVoid) {
-
+                    public void onNext(Integer i) {
+                        if (i == 0) {
+                            storyAdapter.end();
+                            Toast.makeText(App.getSelf(), R.string.no_more, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

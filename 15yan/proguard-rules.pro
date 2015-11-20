@@ -42,7 +42,27 @@
 -dontwarn sun.misc.Unsafe
 
 # For RxJava:
--dontwarn rx.**
+# rxjava
+-keep class rx.schedulers.Schedulers {
+    public static <methods>;
+}
+-keep class rx.schedulers.ImmediateScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.TestScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.Schedulers {
+    public static ** test();
+}
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+    long producerIndex;
+    long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    long producerNode;
+    long consumerNode;
+}
 
 # nio
 -dontwarn java.nio.file.*
@@ -80,11 +100,6 @@
   @javax.inject.* <fields>;
 }
 
-# Keep the generated classes by dagger-compile
--keep class **$$ModuleAdapter
--keep class **$$InjectAdapter
--keep class **$$StaticInjection
-
 #okio
 -dontwarn okio.**
 
@@ -94,11 +109,10 @@
 -dontwarn com.squareup.okhttp.**
 
 # Retrofit
+-dontwarn retrofit.**
 -keep class retrofit.** { *; }
--dontwarn retrofit.appengine.*
--keepclasseswithmembers class * {
-    @retrofit.** *;
-}
+-keepattributes Signature
+-keepattributes Exceptions
 
 # Picasso
 -keep class com.squareup.picasso.** { *; }
@@ -140,3 +154,6 @@
 # LeakCanary
 -keep class org.eclipse.mat.** { *; }
 -keep class com.squareup.leakcanary.** { *; }
+
+#
+-dontwarn com.hannesdorfmann.swipeback.**

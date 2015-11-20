@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.activity;
+package org.liuyichen.fifteenyan.ui.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,9 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.adapter.NavigationAdapter;
+import org.liuyichen.fifteenyan.ui.activity.BaseActivty;
+import org.liuyichen.fifteenyan.ui.activity.SettingsActivity;
+import org.liuyichen.fifteenyan.ui.adapter.NavigationAdapter;
 import org.liuyichen.fifteenyan.databinding.ActivityStoryBinding;
-import org.liuyichen.fifteenyan.fragment.StoryFragment;
+import org.liuyichen.fifteenyan.ui.fragment.StoryFragment;
 import org.liuyichen.fifteenyan.utils.Toast;
 
 public class StoryActivity extends BaseActivty {

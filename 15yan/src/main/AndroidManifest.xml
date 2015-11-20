@@ -27,7 +27,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".activity.StoryActivity"
+            android:name=".ui.activity.StoryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">
@@ -39,19 +39,19 @@
         </activity>
 
         <activity
-            android:name=".activity.DetailActivity"
+            android:name=".ui.activity.DetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Detail" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.liuyichen.fifteenyan.activity.StoryActivity" />
+                android:value=".ui.activity.StoryActivity" />
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:label="@string/settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.liuyichen.fifteenyan.activity.StoryActivity" />
+                android:value=".ui.activity.StoryActivity" />
         </activity>
 
     </application>

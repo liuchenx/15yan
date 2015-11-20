@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.api;
+package org.liuyichen.fifteenyan.network.plugin;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;

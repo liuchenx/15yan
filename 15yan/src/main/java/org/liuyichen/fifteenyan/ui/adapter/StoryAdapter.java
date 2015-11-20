@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.adapter;
+package org.liuyichen.fifteenyan.ui.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,8 +16,8 @@ import com.squareup.picasso.Picasso;
 
 import org.liuyichen.fifteenyan.BR;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.activity.BaseActivty;
-import org.liuyichen.fifteenyan.activity.DetailActivity;
+import org.liuyichen.fifteenyan.ui.activity.BaseActivty;
+import org.liuyichen.fifteenyan.ui.activity.DetailActivity;
 import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.utils.Settings;
 
@@ -26,6 +26,16 @@ import org.liuyichen.fifteenyan.utils.Settings;
  * By liuyichen on 14-12-12 下午4:36.
  */
 public class StoryAdapter extends CursorAdapter {
+
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_LOAD = 1;
+
+    private boolean isEnd = false;
+
+    public interface OnEndListener {
+
+        void OnEnd();
+    }
 
     public StoryAdapter(Context context) {
         super(context, null);
@@ -46,8 +56,43 @@ public class StoryAdapter extends CursorAdapter {
 
     }
 
+    public class LoadViewHoler extends RecyclerView.ViewHolder {
+
+        public LoadViewHoler(View itemView) {
+            super(itemView);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (isEnd || position < super.getItemCount()) {
+            return TYPE_ITEM;
+        }
+        return TYPE_LOAD;
+    }
+
+    @Override
+    public int getItemCount() {
+
+        if (super.getItemCount() == 0 || isEnd) {
+            return super.getItemCount();
+        }
+        return super.getItemCount() + 1;
+    }
+
+    public void end() {
+        isEnd = true;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_LOAD) {
+            return new LoadViewHoler(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item_loading,
+                    parent,
+                    false));
+        }
         ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.view_item_story,
                 parent,
@@ -57,9 +102,21 @@ public class StoryAdapter extends CursorAdapter {
         return viewHoler;
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, Cursor cursor) {
+    private OnEndListener onEndListener;
+    public void setOnEndListener(OnEndListener l) {
 
+        onEndListener = l;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, Cursor cursor, int position) {
+
+        if (getItemViewType(position) == TYPE_LOAD) {
+            if (onEndListener != null) {
+                onEndListener.OnEnd();
+            }
+            return ;
+        }
         final Story story = Story.loadCursor(cursor);
         final StoryViewHoler vh = (StoryViewHoler) holder;
 

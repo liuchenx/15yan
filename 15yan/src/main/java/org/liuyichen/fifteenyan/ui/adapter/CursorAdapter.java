@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.adapter;
+package org.liuyichen.fifteenyan.ui.adapter;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -79,17 +79,21 @@ public abstract class CursorAdapter<VH extends RecyclerView.ViewHolder> extends 
         }
     }
 
-    protected abstract void onBindViewHolder(VH holder, Cursor cursor);
+    protected abstract void onBindViewHolder(VH holder, Cursor cursor, int position);
 
     @Override
     public final void onBindViewHolder(VH holder, int position) {
         if (!mDataValid) {
-            throw new IllegalStateException("this should only be called when the cursor is valid");
+            onBindViewHolder(holder, null, position);
+            return;
+        //    throw new IllegalStateException("this should only be called when the cursor is valid");
         }
         if (!mCursor.moveToPosition(position)) {
-            throw new IllegalStateException("couldn't move cursor to position " + position);
+            onBindViewHolder(holder, null, position);
+            return;
+            //throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-        onBindViewHolder(holder, mCursor);
+        onBindViewHolder(holder, mCursor, position);
     }
 
     public Cursor getCursor() {

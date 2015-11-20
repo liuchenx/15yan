@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.activity;
+package org.liuyichen.fifteenyan.ui.activity;
 
 
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.activity;
+package org.liuyichen.fifteenyan.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import com.hannesdorfmann.swipeback.Position;
 import com.hannesdorfmann.swipeback.SwipeBack;
 
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.fragment.DetailFragment;
+import org.liuyichen.fifteenyan.ui.fragment.DetailFragment;
 import org.liuyichen.fifteenyan.model.Story;
 
 

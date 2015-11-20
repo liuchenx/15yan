@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.fragment;
+package org.liuyichen.fifteenyan.ui.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.api.Api;
+import org.liuyichen.fifteenyan.network.Api;
 import org.liuyichen.fifteenyan.databinding.FragmentDetailBinding;
 import org.liuyichen.fifteenyan.model.DetailCache;
 import org.liuyichen.fifteenyan.model.Story;

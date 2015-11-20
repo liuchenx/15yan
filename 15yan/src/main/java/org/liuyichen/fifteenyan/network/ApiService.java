@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.api;
+package org.liuyichen.fifteenyan.network;
 
 import org.liuyichen.fifteenyan.model.Data;
 

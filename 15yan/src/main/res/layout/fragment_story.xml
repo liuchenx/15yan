@@ -17,15 +17,14 @@
         app:ptr_pull_to_fresh="false"
         app:ptr_ratio_of_header_height_to_refresh="1.0"
         app:ptr_resistance="1.7"
-        tools:context="org.liuyichen.fifteenyan.fragment.StoryFragment" >
+        tools:context=".ui.fragment.StoryFragment" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             style="@style/AppTheme.Scrollbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:fadingEdgeLength="0dp"/>
+            android:overScrollMode="never"/>
 
     </in.srain.cube.views.ptr.PtrFrameLayout>
 </layout>

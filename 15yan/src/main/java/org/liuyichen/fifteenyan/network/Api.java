@@ -1,9 +1,10 @@
-package org.liuyichen.fifteenyan.api;
+package org.liuyichen.fifteenyan.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.liuyichen.fifteenyan.http.Network;
+import org.liuyichen.fifteenyan.network.plugin.StringConverterFactory;
+import org.liuyichen.fifteenyan.network.plugin.Network;
 import org.liuyichen.fifteenyan.model.Data;
 
 import retrofit.GsonConverterFactory;

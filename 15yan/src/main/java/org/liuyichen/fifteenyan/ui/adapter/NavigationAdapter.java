@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.adapter;
+package org.liuyichen.fifteenyan.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.api.Category;
-import org.liuyichen.fifteenyan.fragment.StoryFragment;
+import org.liuyichen.fifteenyan.network.Category;
+import org.liuyichen.fifteenyan.ui.fragment.StoryFragment;
 
 /**
  * Created by root on 15-3-6.

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="item_text_footnote_color">#B3B3B1</color>
-
+    <color name="separator_color">#30B3B3B1</color>
     <color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="primary_light">#C8E6C9</color>

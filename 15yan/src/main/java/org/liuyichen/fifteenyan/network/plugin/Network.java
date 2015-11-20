@@ -1,4 +1,4 @@
-package org.liuyichen.fifteenyan.http;
+package org.liuyichen.fifteenyan.network.plugin;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.OkHttpClient;

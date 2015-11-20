@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/separator_color"/>
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/separator"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:matProg_barWidth="3dp"
+        app:matProg_barColor="@color/primary"
+        app:matProg_progressIndeterminate="true" />
+</RelativeLayout>
