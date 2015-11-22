@@ -7,18 +7,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.network.Api;
 import org.liuyichen.fifteenyan.databinding.FragmentDetailBinding;
 import org.liuyichen.fifteenyan.model.DetailCache;
 import org.liuyichen.fifteenyan.model.Story;
+import org.liuyichen.fifteenyan.network.Api;
 import org.liuyichen.fifteenyan.utils.AssetsUtils;
 import org.liuyichen.fifteenyan.utils.Settings;
 import org.liuyichen.fifteenyan.utils.Toast;
@@ -90,8 +92,23 @@ public class DetailFragment extends BaseFragment {
             }
         });
 
+        webView.setWebChromeClient(new WebChromeClient(){
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+
+                if(newProgress < 100 && binding.progress.getVisibility() == ProgressBar.GONE){
+                    binding.progress.setVisibility(View.VISIBLE);
+                    binding.webview.setVisibility(View.GONE);
+                }
+                if(newProgress == 100) {
+                    binding.progress.setVisibility(View.GONE);
+                    binding.webview.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
@@ -99,6 +116,7 @@ public class DetailFragment extends BaseFragment {
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setAppCacheEnabled(true);
     }
+
 
     private Subscription subscription;
 
@@ -182,7 +200,7 @@ public class DetailFragment extends BaseFragment {
         body.getElementsByClass("post-info").remove();
         body.getElementsByClass("post-footer").remove();
 
-        String html = AssetsUtils.loadText(getActivity().getApplication(), "www/template.html");
+        String html = AssetsUtils.loadText(App.getSelf(), "www/template.html");
         if (html != null) {
             html = html.replace("{content}", body.html());
         }
