@@ -5,20 +5,24 @@ import android.database.Cursor;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.Bitmap;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.makeramen.RoundedTransformationBuilder;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
+import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.BR;
 import org.liuyichen.fifteenyan.R;
+import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.ui.activity.BaseActivty;
 import org.liuyichen.fifteenyan.ui.activity.DetailActivity;
-import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.utils.Settings;
 
 
@@ -134,12 +138,18 @@ public class StoryAdapter extends CursorAdapter {
     }
 
     @BindingAdapter("imageUrl")
-    public static void loadImage(ImageView view, String url) {
+    public static void loadImage(final ImageView view, String url) {
         if (Settings.canLoadImage()) {
             view.setVisibility(View.VISIBLE);
-            int radiu = (int) (view.getContext().getResources().getDimension(R.dimen.item_avatar_size) / 2.0f);
-            RoundedTransformationBuilder transformationBuilder = new RoundedTransformationBuilder().cornerRadius(radiu).oval(false);
-            Picasso.with(view.getContext()).load(url).fit().transform(transformationBuilder.build()).into(view);
+            Glide.with(App.getSelf()).load(url).asBitmap().centerCrop().into(new BitmapImageViewTarget(view) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable =
+                            RoundedBitmapDrawableFactory.create(App.getSelf().getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    view.setImageDrawable(circularBitmapDrawable);
+                }
+            });
         } else {
             view.setVisibility(View.GONE);
         }

@@ -20,7 +20,9 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
-
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp.OkHttpGlideModule"
+            android:value="GlideModule" />
         <provider
             android:name=".provider.StoryProvider"
             android:authorities="${applicationId}"
@@ -40,8 +42,7 @@
 
         <activity
             android:name=".ui.activity.DetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Detail" >
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.StoryActivity" />

@@ -11,7 +11,4 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="AppTheme.Detail" parent="AppTheme" >
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
 </resources>

@@ -183,6 +183,7 @@ public class DetailFragment extends BaseFragment {
 
         Document doc = Jsoup.parse(h);
         Element body = doc.body();
+        body.getElementsByClass("post-field").remove();
         body.getElementsByClass("site-nav").remove();
         body.getElementsByClass("nav-side").remove();
         body.getElementsByClass("site-nav-overlay").remove();
