@@ -10,14 +10,6 @@
     <style name="AppTheme" parent="AppTheme.Base" />
     <style name="AppTheme.Detail" parent="AppTheme" />
 
-    <style name="AppTheme.Scrollbar" parent="AppTheme" >
-        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:scrollbarStyle">insideOverlay</item>
-        <item name="android:scrollbars">vertical</item>
-        <item name="android:fadeScrollbars">true</item>
-        <item name="android:scrollbarThumbVertical">@drawable/shape_scrollbar</item>
-    </style>
-
     <style name="AppTheme.PopupMenu" parent="Widget.AppCompat.PopupMenu" >
         <item name="android:colorBackground">@color/primary_light</item>
         <item name="android:textColor">@color/primary_dark</item>

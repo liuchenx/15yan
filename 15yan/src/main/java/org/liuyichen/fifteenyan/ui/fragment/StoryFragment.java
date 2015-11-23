@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +15,13 @@ import android.view.ViewGroup;
 
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.R;
-import org.liuyichen.fifteenyan.ui.adapter.StoryAdapter;
-import org.liuyichen.fifteenyan.network.Api;
-import org.liuyichen.fifteenyan.network.Category;
 import org.liuyichen.fifteenyan.databinding.FragmentStoryBinding;
 import org.liuyichen.fifteenyan.model.Data;
 import org.liuyichen.fifteenyan.model.Story;
+import org.liuyichen.fifteenyan.network.Api;
+import org.liuyichen.fifteenyan.network.Category;
 import org.liuyichen.fifteenyan.provider.StoryProvider;
+import org.liuyichen.fifteenyan.ui.adapter.StoryAdapter;
 import org.liuyichen.fifteenyan.utils.Toast;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -92,8 +91,6 @@ public class StoryFragment extends BindFragment
                 load(offset);
             }
         });
-        LinearLayoutManager lm = new LinearLayoutManager(App.getSelf());
-        binding.recyclerview.setLayoutManager(lm);
         binding.recyclerview.setAdapter(storyAdapter);
     }
 
@@ -117,7 +114,6 @@ public class StoryFragment extends BindFragment
         int[] colors = new int[]{getResources().getColor(R.color.primary)};
         header.setColorSchemeColors(colors);
 
-        binding.ptrFrame.setDurationToCloseHeader(1500);
         binding.ptrFrame.setHeaderView(header);
         binding.ptrFrame.addPtrUIHandler(header);
     }

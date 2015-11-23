@@ -21,10 +21,10 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
-            style="@style/AppTheme.Scrollbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never"
+            app:layoutManager="LinearLayoutManager" />
 
     </in.srain.cube.views.ptr.PtrFrameLayout>
 </layout>
