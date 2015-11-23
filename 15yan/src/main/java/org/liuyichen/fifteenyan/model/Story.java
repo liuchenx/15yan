@@ -23,7 +23,6 @@ public class Story extends Model implements Parcelable {
     public String title;
 
     @Column("subtitle")
-
     @Expose
     public String subtitle;
 
@@ -36,6 +35,11 @@ public class Story extends Model implements Parcelable {
     @Expose
     @SerializedName("id")
     public String storyId;
+
+    @Column("storyImage")
+    @Expose
+    @SerializedName("image")
+    public String storyImage;
 
     @Column("account")
     @Expose
@@ -77,6 +81,7 @@ public class Story extends Model implements Parcelable {
         dest.writeString(this.subtitle);
         dest.writeValue(this.readCost);
         dest.writeString(this.storyId);
+        dest.writeString(this.storyImage);
         dest.writeParcelable(this.account, flags);
         dest.writeString(this.category);
     }
@@ -86,6 +91,7 @@ public class Story extends Model implements Parcelable {
         this.subtitle = in.readString();
         this.readCost = (Integer) in.readValue(Integer.class.getClassLoader());
         this.storyId = in.readString();
+        this.storyImage = in.readString();
         this.account = in.readParcelable(Account.class.getClassLoader());
         this.category = in.readString();
     }

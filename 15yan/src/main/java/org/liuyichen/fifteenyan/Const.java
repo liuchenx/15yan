@@ -7,7 +7,7 @@ public class Const {
 
     public static final String DB_NAME = "FifteenYan.db";
 
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
     public static final String SETTINGS_PREFERENCES_NAME = "Settings";
     public static final String SETTINGS_PREFERENCES_ONLY_WIFI = "only_wifi";

@@ -11,10 +11,15 @@
         android:layout_height="match_parent"
         tools:context=".ui.fragment.DetailFragment">
 
-        <WebView
-            android:id="@+id/webview"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" >
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </android.support.v4.widget.NestedScrollView>
 
         <com.pnikosis.materialishprogress.ProgressWheel
             android:id="@+id/progress"
@@ -25,4 +30,5 @@
             app:matProg_barColor="@color/primary"
             app:matProg_progressIndeterminate="true" />
     </RelativeLayout>
+
 </layout>

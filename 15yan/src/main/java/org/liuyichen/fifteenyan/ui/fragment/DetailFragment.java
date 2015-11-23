@@ -1,7 +1,6 @@
 package org.liuyichen.fifteenyan.ui.fragment;
 
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,9 +63,7 @@ public class DetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
-
         initWebview();
-
         return binding.getRoot();
     }
 
@@ -81,9 +78,6 @@ public class DetailFragment extends BaseFragment {
         webView.setVerticalScrollBarEnabled(true);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        if (Build.VERSION.SDK_INT >= 11) {
-            webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-        }
         webView.setEnabled(false);
         webView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -92,16 +86,16 @@ public class DetailFragment extends BaseFragment {
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
 
-                if(newProgress < 100 && binding.progress.getVisibility() == ProgressBar.GONE){
+                if (newProgress < 100 && binding.progress.getVisibility() == ProgressBar.GONE) {
                     binding.progress.setVisibility(View.VISIBLE);
                     binding.webview.setVisibility(View.GONE);
                 }
-                if(newProgress == 100) {
+                if (newProgress == 100) {
                     binding.progress.setVisibility(View.GONE);
                     binding.webview.setVisibility(View.VISIBLE);
                 }
