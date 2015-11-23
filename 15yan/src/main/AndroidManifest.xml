@@ -40,7 +40,8 @@
 
         <activity
             android:name=".ui.activity.DetailActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Detail" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.StoryActivity" />
