@@ -3,7 +3,7 @@
 
 基于data binding 快速开发
 
-use android studio 1.3.0
+use android studio 1.5.0
 
 ## Thinks
 
