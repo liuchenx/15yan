@@ -10,7 +10,7 @@ use android studio 1.5.0
 * [Stetho][1]
 * [Ollie][2]
 * [RxJava][3]
-* [Picasso][4]
+* [Glide][4]
 * [Retrofit][5]
 * [Ultra-ptr][6]
 * [Roundedimageview][7]
@@ -55,7 +55,7 @@ limitations under the License.
 [1]: https://github.com/facebook/stetho
 [2]: https://github.com/pardom/Ollie
 [3]: https://github.com/ReactiveX/RxJava
-[4]: https://github.com/square/picasso
+[4]: https://github.com/bumptech/glide
 [5]: https://github.com/square/retrofit
 [6]: https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh
 [7]: https://github.com/vinc3m1/RoundedImageView
