@@ -61,7 +61,6 @@ public class DetailActivity extends BaseActivty {
             }
             Story story = getIntent().getParcelableExtra(EXTRA_DATA);
             binding.collapsingToolbarLayout.setTitle(story.title);
-
             Glide.with(App.getSelf())
                     .load(story.storyImage)
                     .asBitmap()
@@ -82,6 +81,7 @@ public class DetailActivity extends BaseActivty {
                                         Palette.Swatch swatch = palette.getSwatches().get(0);
                                         setStatusBarColor(swatch.getRgb());
                                         setBackArrowColor(swatch.getBodyTextColor());
+                                        binding.collapsingToolbarLayout.setContentScrimColor(swatch.getRgb());
                                         binding.collapsingToolbarLayout.setExpandedTitleColor(swatch.getBodyTextColor());
                                         binding.collapsingToolbarLayout.setCollapsedTitleTextColor(swatch.getBodyTextColor());
                                     }
