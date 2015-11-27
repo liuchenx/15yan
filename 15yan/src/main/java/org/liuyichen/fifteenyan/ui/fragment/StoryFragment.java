@@ -99,10 +99,10 @@ public class StoryFragment extends BindFragment
         super.onDestroyView();
         binding.unbind();
         getLoaderManager().destroyLoader(0);
-        if (fristSubscription != null && fristSubscription.isUnsubscribed()) {
+        if (fristSubscription != null && !fristSubscription.isUnsubscribed()) {
             fristSubscription.unsubscribe();
         }
-        if (loadSubscription != null && loadSubscription.isUnsubscribed()) {
+        if (loadSubscription != null && !loadSubscription.isUnsubscribed()) {
             loadSubscription.unsubscribe();
         }
     }
@@ -150,7 +150,8 @@ public class StoryFragment extends BindFragment
             return;
         }
         isLoading = true;
-        loadSubscription = Observable.just(offset).flatMap(new Func1<Integer, Observable<Data>>() {
+        loadSubscription = Observable
+                .just(offset).flatMap(new Func1<Integer, Observable<Data>>() {
                     @Override
                     public Observable<Data> call(Integer offset) {
                         if (offset == 0) {
@@ -225,6 +226,9 @@ public class StoryFragment extends BindFragment
     @Override
     public void onRefreshBegin(PtrFrameLayout ptr) {
         offset = 0;
+        if (loadSubscription != null && !loadSubscription.isUnsubscribed()) {
+            loadSubscription.unsubscribe();
+        }
         load(offset);
     }
 

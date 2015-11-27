@@ -3,7 +3,6 @@ package org.liuyichen.fifteenyan.ui.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.databinding.BindingAdapter;
-import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -20,6 +19,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import org.liuyichen.fifteenyan.App;
 import org.liuyichen.fifteenyan.BR;
 import org.liuyichen.fifteenyan.R;
+import org.liuyichen.fifteenyan.databinding.ViewItemStoryBinding;
 import org.liuyichen.fifteenyan.model.Story;
 import org.liuyichen.fifteenyan.ui.activity.BaseActivty;
 import org.liuyichen.fifteenyan.ui.activity.DetailActivity;
@@ -48,14 +48,15 @@ public class StoryAdapter extends CursorAdapter {
     public class StoryViewHoler extends RecyclerView.ViewHolder {
 
         private ViewDataBinding binding;
-        public StoryViewHoler(View itemView) {
-            super(itemView);
-        }
-        public ViewDataBinding getBinding() {
-            return binding;
-        }
-        public void setBinding(ViewDataBinding binding) {
+        public StoryViewHoler(ViewDataBinding binding) {
+            super(binding.getRoot());
             this.binding = binding;
+        }
+
+        public void setStory(Story story) {
+
+            binding.setVariable(BR.story, story);
+            binding.executePendingBindings();
         }
 
     }
@@ -97,13 +98,10 @@ public class StoryAdapter extends CursorAdapter {
                     parent,
                     false));
         }
-        ViewDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                R.layout.view_item_story,
+        ViewDataBinding binding = ViewItemStoryBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent,
                 false);
-        StoryViewHoler viewHoler = new StoryViewHoler(binding.getRoot());
-        viewHoler.setBinding(binding);
-        return viewHoler;
+        return new StoryViewHoler(binding);
     }
 
     private OnEndListener onEndListener;
@@ -124,9 +122,7 @@ public class StoryAdapter extends CursorAdapter {
         final Story story = Story.loadCursor(cursor);
         final StoryViewHoler vh = (StoryViewHoler) holder;
 
-        vh.getBinding().setVariable(BR.story, story);
-        vh.getBinding().executePendingBindings();
-
+        vh.setStory(story);
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
